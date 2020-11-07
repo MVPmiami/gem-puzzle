@@ -51,6 +51,7 @@ newGame.addEventListener('click', ()=>{
   gameMenu.classList.remove('active-game-menu');
   gameMenuList.classList.remove('active-game-menu-list');
   gameMenuList.classList.add('hidden-game-menu-list');
+  generatorCountClick();
   resetButton();
   generateNewGame();
   menuClick();
@@ -142,6 +143,7 @@ if(leftTarget === '0px'){
   target.style.left = `${leftTarget}px`;
   emptyPlate.style.left = `${leftEmptyPlate}px`;
   musicMove();
+  CountClick()
 }else{
   leftEmptyPlate = leftEmptyPlate.substr(0,3);
   leftTarget = leftTarget.substr(0,3);
@@ -152,6 +154,7 @@ if(leftTarget === '0px'){
   target.style.left = `${leftTarget}px`;
   emptyPlate.style.left = `${leftEmptyPlate}px`;
   musicMove();
+  CountClick()
 }
 }
 
@@ -167,7 +170,8 @@ function toLeft(target,emptyPlate){
     leftEmptyPlate += 154;
     target.style.left = `${leftTarget}px`;
     emptyPlate.style.left = `${leftEmptyPlate}px`;
-    musicMove()
+    musicMove();
+    CountClick();
   }else{
     leftEmptyPlate = leftEmptyPlate.substr(0,3);
     leftTarget = leftTarget.substr(0,3);
@@ -177,7 +181,8 @@ function toLeft(target,emptyPlate){
     leftEmptyPlate += 154;
     target.style.left = `${leftTarget}px`;
     emptyPlate.style.left = `${leftEmptyPlate}px`;
-    musicMove()
+    musicMove();
+    CountClick();
   }
  }
  
@@ -193,7 +198,8 @@ function toBottom(target,emptyPlate){
     leftEmptyPlate -= 154;
     target.style.top = `${leftTarget}px`;
     emptyPlate.style.top = `${leftEmptyPlate}px`;
-    musicMove()
+    musicMove();
+    CountClick();
   }else{
     leftEmptyPlate = leftEmptyPlate.substr(0,3);
     leftTarget = leftTarget.substr(0,3);
@@ -203,7 +209,8 @@ function toBottom(target,emptyPlate){
     leftEmptyPlate -= 154;
     target.style.top = `${leftTarget}px`;
     emptyPlate.style.top = `${leftEmptyPlate}px`;
-    musicMove()
+    musicMove();
+    CountClick();
   }
 }
 
@@ -219,7 +226,8 @@ function toTop(target,emptyPlate){
     leftEmptyPlate += 154;
     target.style.top = `${leftTarget}px`;
     emptyPlate.style.top = `${leftEmptyPlate}px`;
-    musicMove()
+    musicMove();
+    CountClick();
   }else{
     leftEmptyPlate = leftEmptyPlate.substr(0,3);
     leftTarget = leftTarget.substr(0,3);
@@ -229,7 +237,8 @@ function toTop(target,emptyPlate){
     leftEmptyPlate += 154;
     target.style.top = `${leftTarget}px`;
     emptyPlate.style.top = `${leftEmptyPlate}px`;
-    musicMove()
+    musicMove();
+    CountClick();
   }
 }  
 
@@ -290,7 +299,27 @@ function resetButton() {
  }); 
 }
 
-console.log(desktop.children)
+//счетчик ходов
+let count = 0;
+
+function generatorCountClick() {
+  let  countClick = document.createElement('div');
+  let span = document.createElement('span');
+  span.innerHTML = `Steps: `;
+  span.className = 'counter';
+  countClick.className = 'count-click';
+  countClick.appendChild(span);
+  main.appendChild(countClick);
+}
+
+function CountClick(){
+  count = +count + 1;
+  count = count.toString();
+
+  let counter = document.querySelector('.counter');
+
+  counter.innerHTML = `Steps: ${count}`;
+}
 
 
 
