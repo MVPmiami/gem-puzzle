@@ -1,5 +1,22 @@
 const desktop = document.querySelector('.game-desktop');
 const main = document.querySelector('main');
+let victoryWindow;
+let countItem = [];
+let item1;
+let item2;
+let item3;
+let item4;
+let item5;
+let item6;
+let item7;
+let item8;
+let item9;
+let item10;
+let item11;
+let item12;
+let item13;
+let item14;
+let item15;
 let num;
 let numArr = [];
 // Получаем массив из рандомных чисел до 15
@@ -40,6 +57,21 @@ function generateNewGame() {
         element.classList.add(`position-${i}`);
       }
     }
+    item1 = document.querySelector('.puzzle-1');
+    item2 = document.querySelector('.puzzle-2');
+    item3 = document.querySelector('.puzzle-3');
+    item4 = document.querySelector('.puzzle-4');
+    item5 = document.querySelector('.puzzle-5');
+    item6 = document.querySelector('.puzzle-6');
+    item7 = document.querySelector('.puzzle-7');
+    item8 = document.querySelector('.puzzle-8');
+    item9 = document.querySelector('.puzzle-9');
+    item10 = document.querySelector('.puzzle-10');
+    item11 = document.querySelector('.puzzle-11');
+    item12 = document.querySelector('.puzzle-12');
+    item13 = document.querySelector('.puzzle-13');
+    item14 = document.querySelector('.puzzle-14');
+    item15 = document.querySelector('.puzzle-15');
 }
 
 // событие на кнопке new game
@@ -51,6 +83,10 @@ newGame.addEventListener('click', ()=>{
   gameMenu.classList.remove('active-game-menu');
   gameMenuList.classList.remove('active-game-menu-list');
   gameMenuList.classList.add('hidden-game-menu-list');
+  desktop.classList.add('position-desktop');
+  setInterval(checkVictory,2000);
+  generatorTimer();
+  setInterval(timer, 1000);
   generatorCountClick();
   resetButton();
   generateNewGame();
@@ -78,15 +114,15 @@ desktop.addEventListener('click', (event) => {
     console.log(target.innerHTML);
     target = target.parentNode;
   }
-  //console.log(x);
-  //console.log(y);
+  console.log(x);
+  console.log(y);
   //console.log(pos);
-  console.log(emptyPlate);
+  //console.log(emptyPlate);
   //console.log(xEmpty);
   //console.log(yEmpty);
   //console.log(posEmpty);
-  console.log(xDifferent);
-  console.log(yDifferent);
+  //console.log(xDifferent);
+  //console.log(yDifferent);
 
 
 
@@ -242,25 +278,37 @@ function toTop(target,emptyPlate){
   }
 }  
 
-// Звук перемещения плитки
+// Звуки
 
 function musicMove(){
   let audio = new Audio();
   audio.src = 'assets/move.mp3';
   audio.autoplay = true;
 }
-
+let gameMusic;
 function musicGame(){
-  let audio = new Audio();
-  audio.src = 'assets/game.mp3';
-  audio.autoplay = true;
-  audio.volume = 0.2;
-  audio.loop = 'loop';
+  gameMusic = new Audio();
+  gameMusic.src = 'assets/game.mp3';
+  gameMusic.autoplay = true;
+  gameMusic.volume = 0.2;
+  gameMusic.loop = 'loop';
+}
+
+function musicGameOff(){
+  gameMusic.autoplay = false;
+  gameMusic.volume = 0;
 }
 
 function menuClick(){
   let audio = new Audio();
   audio.src = 'assets/menu-click.mp3';
+  audio.autoplay = true;
+  audio.volume = 1;
+}
+
+function musicWin(){
+  let audio = new Audio();
+  audio.src = 'assets/win.mp3';
   audio.autoplay = true;
   audio.volume = 1;
 }
@@ -283,7 +331,9 @@ function resetButton() {
   
  // навешиваем событие на резет
  reset.addEventListener('click',() =>{
+  resetCount();
   clearDesktop();
+  resetTimer();
   randomNum(1,15);
   numArr.push(num);
   for(let i = 1; i <= 14; i++ ){
@@ -305,7 +355,7 @@ let count = 0;
 function generatorCountClick() {
   let  countClick = document.createElement('div');
   let span = document.createElement('span');
-  span.innerHTML = `Steps: `;
+  span.innerHTML = `Steps: ${count}`;
   span.className = 'counter';
   countClick.className = 'count-click';
   countClick.appendChild(span);
@@ -317,14 +367,134 @@ function CountClick(){
   count = count.toString();
 
   let counter = document.querySelector('.counter');
-
   counter.innerHTML = `Steps: ${count}`;
 }
 
+function resetCount() {
+  count = 0;
+
+  let counter = document.querySelector('.counter');
+  counter.innerHTML = `Steps: ${count}`;
+}
+
+// Таймер
+let min = 0;
+let sec = 0;
+function generatorTimer() {
+  let timer = document.createElement('div');
+  let span = document.createElement('span');
+  span.innerHTML = `${min} : ${sec}`;
+  span.classList.add('clock');
+  timer.classList.add('timer');
+  timer.appendChild(span);
+  main.appendChild(timer);
+}
+
+function timer() {
+  let timer = document.querySelector('.clock');
+  sec++;
+  if(sec === 60){
+    min++;
+    sec = 0;
+  }
+  timer.innerHTML = `${min} : ${sec}`;
+}
+
+function resetTimer() {
+  let timer = document.querySelector('.clock');
+  min = 0;
+  sec = 0;
+  timer.innerHTML = `${min} : ${sec}`;
+}
+
+// определяем победу
 
 
+function checkVictory() {
+  countItem = [];
+  let xcoord = item5.getBoundingClientRect().x;
+  let ycoord = item5.getBoundingClientRect().y;
+  if(item1.getBoundingClientRect().x === 654 && item1.getBoundingClientRect().y === 212){
+    countItem.push('1')
+  }
+  if( item2.getBoundingClientRect().x === 808 && item2.getBoundingClientRect().y === 212){
+    countItem.push('2')
+  }
+  if( item3.getBoundingClientRect().x === 962 && item3.getBoundingClientRect().y === 212){
+    countItem.push('3')
+  }
+  if( item4.getBoundingClientRect().x === 1116 && item4.getBoundingClientRect().y === 212){
+    countItem.push('4')
+  }
+  if( item5.getBoundingClientRect().x === 654 && item5.getBoundingClientRect().y === 366){
+    countItem.push('5')
+  }
+  if( item6.getBoundingClientRect().x === 808 && item6.getBoundingClientRect().y === 366){
+    countItem.push('6')
+  }
+  if( item7.getBoundingClientRect().x === 962 && item7.getBoundingClientRect().y === 366){
+    countItem.push('7')
+  }
+  if( item8.getBoundingClientRect().x === 1116 && item8.getBoundingClientRect().y === 366){
+    countItem.push('8')
+  }
+  if( item9.getBoundingClientRect().x === 654 && item9.getBoundingClientRect().y === 520){
+    countItem.push('9')
+  }
+  if( item10.getBoundingClientRect().x === 808 && item10.getBoundingClientRect().y === 520){
+    countItem.push('10')
+  }
+  if( item11.getBoundingClientRect().x === 962 && item11.getBoundingClientRect().y === 520){
+    countItem.push('11')
+  }
+  if( item12.getBoundingClientRect().x === 1116 && item12.getBoundingClientRect().y === 520){
+    countItem.push('12')
+  }
+  if( item13.getBoundingClientRect().x === 654 && item13.getBoundingClientRect().y === 674){
+    countItem.push('13')
+  }
+  if( item14.getBoundingClientRect().x === 808 && item14.getBoundingClientRect().y === 674){
+    countItem.push('14')
+  }
+  if( item15.getBoundingClientRect().x === 962 && item15.getBoundingClientRect().y === 674){
+    countItem.push('15')
+  }
+  console.log(` length: ${main.children.length}`)
+  if(main.children.length === 4){
+    if(countItem.length === 15){
+      generateVictoryWindow(min,sec,count);
+    }
+  }else{
+    return;
+  }
+}
 
+function generateVictoryWindow(min,sec,count){
+  victoryWindow = document.createElement('div');
+  victoryWindow.classList.add('victory-window');
+  let victoryH1 = document.createElement('h1');
+  victoryH1.classList.add('victory');
+  victoryH1.innerHTML = 'VICTORY';
+  let timeVictory = document.createElement('span');
+  timeVictory.classList.add('time-victory');
+  timeVictory.innerHTML = `time: ${min} : ${sec}`;
+  let br = document.createElement('br');
+  let stepsVictory = document.createElement('span');
+  stepsVictory.classList.add('steps-victory');
+  stepsVictory.innerHTML = `steps: ${count}`;
 
+  victoryWindow.appendChild(victoryH1)
+  victoryWindow.appendChild(timeVictory)
+  victoryWindow.appendChild(br);
+  victoryWindow.appendChild(stepsVictory)
+  main.appendChild(victoryWindow);
+  victoryWindow = document.querySelector('.victory-window');
+  musicWin();
+  musicGameOff();
+}
 
-
+function clearVictoryWindow(){
+  victoryWindow.classList.add('victory-window-hidden');
+  victoryWindow.innerHTML = '';
+}
 
