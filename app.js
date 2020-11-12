@@ -1,5 +1,10 @@
 const desktop = document.querySelector('.game-desktop');
 const main = document.querySelector('main');
+const menuList = document.querySelector('.active-game-menu-list');
+const menuBtn = document.createElement('div');
+let isGame = false;
+let result = [];
+let countResult = 1;
 let victoryWindow;
 let countItem = [];
 let item1;
@@ -89,9 +94,11 @@ newGame.addEventListener('click', ()=>{
   setInterval(timer, 1000);
   generatorCountClick();
   resetButton();
+  generateMenuBtn();
   generateNewGame();
   menuClick();
   setTimeout(musicGame,500);
+  isGame = true;
 });
 
 
@@ -333,8 +340,14 @@ function resetButton() {
  reset.addEventListener('click',() =>{
   resetCount();
   clearDesktop();
+  clearVictoryWindow();
   resetTimer();
   randomNum(1,15);
+  musicGameOff();
+  musicGame();
+  desktop.appendChild(gameMenu);
+  gameMenu.appendChild(gameMenuList);
+  gameMenuList.classList.add('hidden-game-menu-list');
   numArr.push(num);
   for(let i = 1; i <= 14; i++ ){
     randomNum(1,15);
@@ -407,6 +420,34 @@ function resetTimer() {
   timer.innerHTML = `${min} : ${sec}`;
 }
 
+//делаем кнопку меню в игре 
+
+function generateMenuBtn() {
+  menuBtn.classList.add('menu-button');
+  menuBtn.innerHTML = 'Menu';
+  main.appendChild(menuBtn);
+}
+
+const resume = document.createElement('li');
+
+menuBtn.addEventListener('click', ()=>{
+  resume.innerHTML = 'Resume';
+  resume.classList.add('resume');
+  gameMenuList.appendChild(resume);
+  newGame.classList.add('hidden-game-menu-list');
+  gameMenu.classList.add('active-game-menu');
+  gameMenuList.classList.add('active-game-menu-list');
+  gameMenuList.classList.remove('hidden-game-menu-list');
+});
+
+resume.addEventListener('click', ()=>{
+  newGame.classList.add('hidden-game-menu-list');
+  gameMenu.classList.remove('active-game-menu');
+  gameMenuList.classList.remove('active-game-menu-list');
+  gameMenuList.classList.add('hidden-game-menu-list');
+  gameMenuList.removeChild(resume);
+});
+
 // определяем победу
 
 
@@ -459,10 +500,12 @@ function checkVictory() {
   if( item15.getBoundingClientRect().x === 962 && item15.getBoundingClientRect().y === 674){
     countItem.push('15')
   }
-  console.log(` length: ${main.children.length}`)
-  if(main.children.length === 4){
-    if(countItem.length === 15){
+  console.log(` length: ${main.children.length}`);
+  console.log(` length-item: ${countItem.length}`)
+  if(main.children.length === 5){
+    if(countItem.length >= 4){
       generateVictoryWindow(min,sec,count);
+      setResultToStorage(min,sec,count);
     }
   }else{
     return;
@@ -489,12 +532,115 @@ function generateVictoryWindow(min,sec,count){
   victoryWindow.appendChild(stepsVictory)
   main.appendChild(victoryWindow);
   victoryWindow = document.querySelector('.victory-window');
+  victoryWindow.classList.remove('victory-window-hidden');
   musicWin();
   musicGameOff();
 }
 
 function clearVictoryWindow(){
-  victoryWindow.classList.add('victory-window-hidden');
-  victoryWindow.innerHTML = '';
+  if(main.children.length === 5){
+    return;
+  }else{
+    victoryWindow.classList.add('victory-window-hidden');
+    main.removeChild(victoryWindow);
+  }
 }
 
+//результаты
+
+let bestScores = document.querySelector('.best-scores');
+
+bestScores.addEventListener('click', ()=>{
+  let newGame = document.querySelector('.new-game');
+  let bestScores = document.querySelector('.best-scores');
+  let rules = document.querySelector('.rules');
+  let settings = document.querySelector('.settings');
+  newGame.classList.add('hidden-items');
+  bestScores.classList.add('hidden-items');
+  rules.classList.add('hidden-items');
+  settings.classList.add('hidden-items');
+  generateScoresWindow();
+});
+
+function generateListElementsOfBestScore(listBestScores) {
+  for(let i = 1; i <= 10; i++){
+    let listElement = document.createElement('li');
+    let resultElem = localStorage.getItem(i);
+    console.log();
+    resultElem = JSON.parse(resultElem);
+    if(resultElem == undefined){
+      listElement.innerHTML = `${i})-------------------`;
+    }else{
+      listElement.innerHTML = `${i}) ${resultElem}`;
+    }
+    listElement.classList.add('list-element');
+    listBestScores.appendChild(listElement);
+  }
+}
+
+function generateScoresWindow(){
+  if(isGame === true){
+    gameMenuList.removeChild(resume);
+  }
+  let backToMenuBtn = document.createElement('div');
+  backToMenuBtn.classList.add('back-to-menu-btn');
+  backToMenuBtn.innerHTML = 'Back';
+  let scoreWindow = document.createElement('div');
+  scoreWindow.classList.add('score-window');
+  menuList.appendChild(scoreWindow);
+  scoreWindow.appendChild(backToMenuBtn);
+  let listBestScores = document.createElement('ul');
+  listBestScores.classList.add('list-best-scores');
+  scoreWindow.appendChild(listBestScores);
+  generateListElementsOfBestScore(listBestScores);
+  //навешиваем событие на кнопку вернутся в меню
+  backToMenuBtn.addEventListener('click', ()=> {
+    if(isGame === true){
+      gameMenuList.appendChild(resume);
+    }
+    let newGame = document.querySelector('.new-game');
+    let bestScores = document.querySelector('.best-scores');
+    let rules = document.querySelector('.rules');
+    let settings = document.querySelector('.settings');
+    newGame.classList.remove('hidden-items');
+    bestScores.classList.remove('hidden-items');
+    rules.classList.remove('hidden-items');
+    settings.classList.remove('hidden-items');
+    menuList.removeChild(scoreWindow);
+  });
+}
+// записывае в локальное хранилище результаты
+
+function setResultToStorage () {
+  if(localStorage.length === 0){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(1,JSON.stringify(result));
+  }else if(localStorage.length === 1){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(2,JSON.stringify(result));
+  }else if(localStorage.length === 2){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(3,JSON.stringify(result));
+  }else if(localStorage.length === 3){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(4,JSON.stringify(result));
+  }else if(localStorage.length === 4){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(5,JSON.stringify(result));
+  }else if(localStorage.length === 5){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(6,JSON.stringify(result));
+  }else if(localStorage.length === 6){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(7,JSON.stringify(result));
+  }else if(localStorage.length === 7){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(8,JSON.stringify(result));
+  }else if(localStorage.length === 8){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(9,JSON.stringify(result));
+  }else if(localStorage.length === 9){
+    result.push(`Time  ${min} : ${sec} , steps ${count}`);
+    localStorage.setItem(10,JSON.stringify(result));
+  }
+}
