@@ -487,3 +487,7 @@ span {
   position: relative;
   top: -250px;
 }
+
+.hide-drandrop{
+  display: none;
+}

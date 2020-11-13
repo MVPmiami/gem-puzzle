@@ -453,8 +453,10 @@ resume.addEventListener('click', ()=>{
 
 function checkVictory() {
   countItem = [];
-  let xcoord = item5.getBoundingClientRect().x;
-  let ycoord = item5.getBoundingClientRect().y;
+  let xcoord = item15.getBoundingClientRect().x;
+  let ycoord = item15.getBoundingClientRect().y;
+  console.log(`x-coord: ${xcoord}`);
+  console.log(`y-coord: ${ycoord}`);
   if(item1.getBoundingClientRect().x === 654 && item1.getBoundingClientRect().y === 212){
     countItem.push('1')
   }
@@ -501,9 +503,9 @@ function checkVictory() {
     countItem.push('15')
   }
   console.log(` length: ${main.children.length}`);
-  console.log(` length-item: ${countItem.length}`)
+  console.log(` length-item: ${countItem.length}`);
   if(main.children.length === 5){
-    if(countItem.length >= 4){
+    if(countItem.length === 15){
       generateVictoryWindow(min,sec,count);
       setResultToStorage(min,sec,count);
     }
