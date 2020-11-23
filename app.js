@@ -7,7 +7,7 @@ let result = [];
 let countResult = 1;
 let victoryWindow;
 let countItem = [];
-let item1;
+let item1; //Better to use array for such variables
 let item2;
 let item3;
 let item4;
@@ -29,9 +29,9 @@ function randomNum(min,max){
     min = Math.ceil(min);
     max = Math.floor(max);
     num = Math.floor(Math.random() * (max - min + 1)) + min;
-  return num;
+  return num; // you are returning random number why are you assinging it to a variable of upper scope
 }
-
+// assignment of rnd value should look like let num = randomNum(1,15);
 randomNum(1,15);
 numArr.push(num);
 for(let i = 1; i <= 14; i++ ){
@@ -40,7 +40,7 @@ for(let i = 1; i <= 14; i++ ){
     numArr.push(num);
   }else{
     i = i - 1;
-    continue;
+    continue; //no need in continue here
   }
 }
 
@@ -62,7 +62,7 @@ function generateNewGame() {
         element.classList.add(`position-${i}`);
       }
     }
-    item1 = document.querySelector('.puzzle-1');
+    item1 = document.querySelector('.puzzle-1'); // for items - it should be an array and forEach method
     item2 = document.querySelector('.puzzle-2');
     item3 = document.querySelector('.puzzle-3');
     item4 = document.querySelector('.puzzle-4');
@@ -85,7 +85,7 @@ let gameMenu = document.querySelector('.active-game-menu');
 let gameMenuList = document.querySelector('.active-game-menu-list');
 
 newGame.addEventListener('click', ()=>{
-  gameMenu.classList.remove('active-game-menu');
+  gameMenu.classList.remove('active-game-menu'); //it will be nice to toggle one class instead of add and remove different classes
   gameMenuList.classList.remove('active-game-menu-list');
   gameMenuList.classList.add('hidden-game-menu-list');
   desktop.classList.add('position-desktop');
@@ -108,14 +108,14 @@ desktop.addEventListener('click', (event) => {
   let emptyPlate = document.querySelector('.empty-plates-puzzles');
   let xEmpty = emptyPlate.getBoundingClientRect().x;
   let yEmpty = emptyPlate.getBoundingClientRect().y;
-  let posEmpty = emptyPlate.getBoundingClientRect();
+  let posEmpty = emptyPlate.getBoundingClientRect();  // unused variable
   let x = target.getBoundingClientRect().x;
   let y = target.getBoundingClientRect().y;
-  let pos =target.getBoundingClientRect();
+  let pos =target.getBoundingClientRect();   // unused variable
   let xDifferent = xEmpty - x;
   let yDifferent = yEmpty - y;
-  
-  if(target.tagName === 'DIV'){
+
+  if(target.tagName === 'DIV'){      // no need of if else here. Also - remove console.logs before committing
     console.log(target.innerText);
   }else{
     console.log(target.innerHTML);
@@ -123,7 +123,7 @@ desktop.addEventListener('click', (event) => {
   }
   console.log(x);
   console.log(y);
-  //console.log(pos);
+  //console.log(pos);   // you should always remove unused code before committing
   //console.log(emptyPlate);
   //console.log(xEmpty);
   //console.log(yEmpty);
@@ -132,6 +132,17 @@ desktop.addEventListener('click', (event) => {
   //console.log(yDifferent);
 
 
+ // if you have a long condition statement that cannot be clearly readed you should export it to a separate function
+ // with an explanational name. In other case neither any other developer nor you in some time would be able to understand
+ // what is going on here. E.g.:
+  /**
+    function canMoveLeft(x, y) { return (xDifferent === 154 || xDifferent === 149) && (yDifferent === 154 || yDifferent === 113.5) };
+   ...
+
+    if(canMoveLeft(xDifferent, yDifferent) {
+    ...
+    }
+   */
 
   if((xDifferent === 154 || xDifferent === 149) && (yDifferent === 154 || yDifferent === 113.5)){
     return;
@@ -177,8 +188,8 @@ function toRight(target,emptyPlate){
 let leftTarget = window.getComputedStyle(target).left;
 let leftEmptyPlate = window.getComputedStyle(emptyPlate).left;
 if(leftTarget === '0px'){
-  leftTarget = leftTarget.substr(0,1);
   leftEmptyPlate = leftEmptyPlate.substr(0,3);
+  leftTarget = leftTarget.substr(0,1);
   leftTarget = +leftTarget;
   leftEmptyPlate = +leftEmptyPlate;
   leftTarget += 154;
@@ -188,9 +199,9 @@ if(leftTarget === '0px'){
   musicMove();
   CountClick()
 }else{
-  leftEmptyPlate = leftEmptyPlate.substr(0,3);
+  leftEmptyPlate = leftEmptyPlate.substr(0,3); // the only difference is in length. Please avoid code duplication see toRightFixed below
   leftTarget = leftTarget.substr(0,3);
-  leftTarget = +leftTarget;
+  leftTarget = +leftTarget; // duplicates lines 193-200.
   leftEmptyPlate = +leftEmptyPlate;
   leftTarget += 154;
   leftEmptyPlate -= 154;
@@ -218,7 +229,7 @@ function toLeft(target,emptyPlate){
   }else{
     leftEmptyPlate = leftEmptyPlate.substr(0,3);
     leftTarget = leftTarget.substr(0,3);
-    leftTarget = +leftTarget;
+    leftTarget = +leftTarget;        //from here and below - code duplication with 210-217
     leftEmptyPlate = +leftEmptyPlate;
     leftTarget -= 154;
     leftEmptyPlate += 154;
@@ -228,9 +239,9 @@ function toLeft(target,emptyPlate){
     CountClick();
   }
  }
- 
+
 function toBottom(target,emptyPlate){
-  let leftTarget = window.getComputedStyle(target).top;
+  let leftTarget = window.getComputedStyle(target).top;       //from here and below - code duplication with 210-217
   let leftEmptyPlate = window.getComputedStyle(emptyPlate).top;
   if(leftTarget === '0px'){
     leftTarget = leftTarget.substr(0,1);
@@ -257,7 +268,7 @@ function toBottom(target,emptyPlate){
   }
 }
 
-function toTop(target,emptyPlate){
+function toTop(target,emptyPlate){    // this function is absolutely similar with toLeft()
   let leftTarget = window.getComputedStyle(target).top;
   let leftEmptyPlate = window.getComputedStyle(emptyPlate).top;
   if(leftEmptyPlate === '0px'){
@@ -283,11 +294,11 @@ function toTop(target,emptyPlate){
     musicMove();
     CountClick();
   }
-}  
+}
 
 // Звуки
 
-function musicMove(){
+function musicMove(){           // musicMove, musicGame, menuClick, musicWin - very similar functions. It could be one function where you could just pass parameter(src, volume)
   let audio = new Audio();
   audio.src = 'assets/move.mp3';
   audio.autoplay = true;
@@ -301,7 +312,7 @@ function musicGame(){
   gameMusic.loop = 'loop';
 }
 
-function musicGameOff(){
+function musicGameOff(){  //as I see you don't add the ability to switch off the music so this func is unused
   gameMusic.autoplay = false;
   gameMusic.volume = 0;
 }
@@ -335,7 +346,7 @@ function resetButton() {
   reset.appendChild(span);
   main.appendChild(reset);
 
-  
+
  // навешиваем событие на резет
  reset.addEventListener('click',() =>{
   resetCount();
@@ -355,11 +366,11 @@ function resetButton() {
       numArr.push(num);
     }else{
       i = i - 1;
-      continue;
+      continue;  //no need in continue here
     }
   }
   generateNewGame();
- }); 
+ });
 }
 
 //счетчик ходов
@@ -377,7 +388,7 @@ function generatorCountClick() {
 
 function CountClick(){
   count = +count + 1;
-  count = count.toString();
+  count = count.toString() // unnecessary convertion to string
 
   let counter = document.querySelector('.counter');
   counter.innerHTML = `Steps: ${count}`;
@@ -420,7 +431,7 @@ function resetTimer() {
   timer.innerHTML = `${min} : ${sec}`;
 }
 
-//делаем кнопку меню в игре 
+//делаем кнопку меню в игре
 
 function generateMenuBtn() {
   menuBtn.classList.add('menu-button');
@@ -430,7 +441,7 @@ function generateMenuBtn() {
 
 const resume = document.createElement('li');
 
-menuBtn.addEventListener('click', ()=>{
+menuBtn.addEventListener('click', ()=>{      //why are you doing it on click? You could just create it with display:none and than you will toggle display: none/block
   resume.innerHTML = 'Resume';
   resume.classList.add('resume');
   gameMenuList.appendChild(resume);
@@ -440,7 +451,7 @@ menuBtn.addEventListener('click', ()=>{
   gameMenuList.classList.remove('hidden-game-menu-list');
 });
 
-resume.addEventListener('click', ()=>{
+resume.addEventListener('click', ()=>{   // same as above
   newGame.classList.add('hidden-game-menu-list');
   gameMenu.classList.remove('active-game-menu');
   gameMenuList.classList.remove('active-game-menu-list');
@@ -455,9 +466,9 @@ function checkVictory() {
   countItem = [];
   let xcoord = item15.getBoundingClientRect().x;
   let ycoord = item15.getBoundingClientRect().y;
-  console.log(`x-coord: ${xcoord}`);
+  console.log(`x-coord: ${xcoord}`);     // you should have no console.logs in committed code
   console.log(`y-coord: ${ycoord}`);
-  if(item1.getBoundingClientRect().x === 654 && item1.getBoundingClientRect().y === 212){
+  if(item1.getBoundingClientRect().x === 654 && item1.getBoundingClientRect().y === 212){ // main problem with coords approach is a lot of magic numbers in validations
     countItem.push('1')
   }
   if( item2.getBoundingClientRect().x === 808 && item2.getBoundingClientRect().y === 212){
@@ -504,13 +515,13 @@ function checkVictory() {
   }
   console.log(` length: ${main.children.length}`);
   console.log(` length-item: ${countItem.length}`);
-  if(main.children.length === 5){
+  if(main.children.length === 5){  // misuse of if else. It could be if(main.children.length === 5 && countItem.length === 15) { generateVictoryWindow(min,sec,count);   setResultToStorage(min,sec,count); }
     if(countItem.length === 15){
       generateVictoryWindow(min,sec,count);
       setResultToStorage(min,sec,count);
     }
   }else{
-    return;
+    return; // no need in return here
   }
 }
 
@@ -546,6 +557,12 @@ function clearVictoryWindow(){
     victoryWindow.classList.add('victory-window-hidden');
     main.removeChild(victoryWindow);
   }
+
+  // misuse of if else
+  // if(main.children.length !== 5) {
+  //   victoryWindow.classList.add('victory-window-hidden');
+  //   main.removeChild(victoryWindow);
+  // }
 }
 
 //результаты
@@ -568,9 +585,9 @@ function generateListElementsOfBestScore(listBestScores) {
   for(let i = 1; i <= 10; i++){
     let listElement = document.createElement('li');
     let resultElem = localStorage.getItem(i);
-    console.log();
+    console.log();     // no need in console.log
     resultElem = JSON.parse(resultElem);
-    if(resultElem == undefined){
+    if(resultElem == undefined){   // it should be === strict operator
       listElement.innerHTML = `${i})-------------------`;
     }else{
       listElement.innerHTML = `${i}) ${resultElem}`;
@@ -613,7 +630,7 @@ function generateScoresWindow(){
 }
 // записывае в локальное хранилище результаты
 
-function setResultToStorage () {
+function setResultToStorage () {     // you could do it in a loop
   if(localStorage.length === 0){
     result.push(`Time  ${min} : ${sec} , steps ${count}`);
     localStorage.setItem(1,JSON.stringify(result));
@@ -645,4 +662,20 @@ function setResultToStorage () {
     result.push(`Time  ${min} : ${sec} , steps ${count}`);
     localStorage.setItem(10,JSON.stringify(result));
   }
+}
+// 1 step remove if block when not nessesarry then remove dupes
+function toRightFixed(target,emptyPlate){
+  let leftTarget = window.getComputedStyle(target).left;
+  let leftEmptyPlate = window.getComputedStyle(emptyPlate).left;
+
+  leftEmptyPlate = leftEmptyPlate.substr(0, 3);
+  leftTarget = leftTarget.substr(0,leftTarget === '0px' ? 1 : 3);
+  leftTarget = +leftTarget;
+  leftEmptyPlate = +leftEmptyPlate;
+  leftTarget += 154;
+  leftEmptyPlate -= 154;
+  target.style.left = `${leftTarget}px`;
+  emptyPlate.style.left = `${leftEmptyPlate}px`;
+  musicMove();
+  CountClick();
 }
